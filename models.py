@@ -1,9 +1,14 @@
 from flask_sqlalchemy import SQLAlchemy
+import os
+
+
+db_path = os.environ['DATABASE_URL']
+
 
 
 db = SQLAlchemy()
-def setup_db(app):
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://valerian@localhost:5432/preloved'
+def setup_db(app, db_path=db_path):
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     db.app = app
     db.init_app(app)
@@ -22,23 +27,23 @@ class Clothes(db.Model):
 
     def insert(self):
         db.session.add(self)
-        db.session.commit(self)
+        db.session.commit()
 
     def update(self):
         db.session.commit()
 
-    def delete():
+    def delete(self):
         db.session.delete(self)
-        db.session.commit(self)
+        db.session.commit()
 
     def sesion_close(self):
         db.session.close()
 
     def format(self):
-        return jsonify({
+        return {
             'id': self.id,
             'name': self.name,
             'price': self.price,
             'pieces': self.pieces,
             'immage_link': self.immage_link
-        })
+        }
